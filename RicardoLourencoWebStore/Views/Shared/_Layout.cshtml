@@ -55,11 +55,10 @@
                                 </div>
                                 <div class="header-info-right">
                                     <ul>
-                                        <li><a href="login.cshtml">My Account </a></li>
-                                        <li><a href="product_list.html">Wish List  </a></li>
+                                        <li><a asp-action="ChangeUser" asp-controller="Account">My Account </a></li>
                                         <li><a asp-action="Index" asp-controller="Products">Shopping</a></li>
-                                        <li><a href="cart.html">Cart</a></li>
-                                        <li><a href="checkout.html">Checkout</a></li>
+                                        <li><a asp-action="Index" asp-controller="Orders">Cart</a></li>
+                                        <li><a asp-action="Details" asp-controller="Orders">Checkout</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -80,35 +79,16 @@
                                 <div class="main-menu f-right d-none d-lg-block">
                                     <nav>
                                         <ul id="navigation">
-                                            <li><a href="index.html">Home</a></li>
-                                            <li><a href="Catagori.html">Catagori</a></li>
+                                            <li><a asp-action="index" asp-controller="home">Home</a></li>
+                                            <li><a asp-action="Index" asp-controller="Categories">Categories</a></li>
                                             <li class="hot">
                                                 <a href="#">Latest</a>
                                                 <ul class="submenu">
-                                                    <li><a href="product_list.html"> Product list</a></li>
-                                                    <li><a href="single-product.html"> Product Details</a></li>
+                                                    <li><a asp-action="Index" asp-controller="Products"> Product list</a></li>
+                                                    <li><a asp-action="Details" asp-controller="Products"> Product Details</a></li>
                                                 </ul>
                                             </li>
-                                            <li>
-                                                <a href="blog.html">Blog</a>
-                                                <ul class="submenu">
-                                                    <li><a href="blog.html">Blog</a></li>
-                                                    <li><a href="single-blog.html">Blog Details</a></li>
-                                                </ul>
-                                            </li>
-                                            <li>
-                                                <a href="#">Pages</a>
-                                                <ul class="submenu">
-                                                    <li><a href="login.html">Login</a></li>
-                                                    <li><a href="cart.html">Card</a></li>
-                                                    <li><a href="elements.html">Element</a></li>
-                                                    <li><a href="about.html">About</a></li>
-                                                    <li><a href="confirmation.html">Confirmation</a></li>
-                                                    <li><a href="cart.html">Shopping Cart</a></li>
-                                                    <li><a href="checkout.html">Product Checkout</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="contact.html">Contact</a></li>
+                                            <li><a asp-action="Contact" asp-controller="Home">Contact</a></li>
                                         </ul>
                                     </nav>
                                 </div>
@@ -133,7 +113,14 @@
                                             <a href="cart.html"><i class="fas fa-shopping-cart"></i></a>
                                         </div>
                                     </li>
-                                    <li class="d-none d-lg-block"> <a href="#" class="btn header-btn">Sign in</a></li>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <li class="d-none d-lg-block"> <a asp-action="Logout" asp-controller="Account" class="btn header-btn">Sign out</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="d-none d-lg-block"> <a asp-action="Login" asp-controller="Account" class="btn header-btn">Sign In</a></li>
+                                    }
                                 </ul>
                             </div>
                             <!-- Mobile Menu -->

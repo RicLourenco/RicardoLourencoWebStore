@@ -66,10 +66,11 @@ namespace RicardoLourencoWebStore
                 //{
                 //    options.ForwardSignIn = Configuration[""];
                 //})
-                //.AddFacebook(options =>
-                //{
-                //    options.AppId = Configuration[""];
-                //})
+                .AddFacebook(options =>
+                {
+                    options.AppId = Configuration["Authentication:Facebook:AppId"];
+                    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                })
                 //.AddGoogle(options =>
                 //{
                 //    options.ClientId = Configuration[""];
