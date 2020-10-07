@@ -15,8 +15,14 @@ namespace RicardoLourencoWebStore.Data.Entities
         public Product Product { get; set; }
 
 
+        public int ProductId { get; set; }
+
+
         [DisplayFormat(DataFormatString = "{0:C2}")]
         public float Price { get; set; }
+
+
+        public int OrderId { get; set; }
 
 
         [DisplayFormat(DataFormatString = "{0:N2}")]

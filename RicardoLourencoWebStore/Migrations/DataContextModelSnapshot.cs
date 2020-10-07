@@ -152,8 +152,7 @@ namespace RicardoLourencoWebStore.Migrations
 
                     b.Property<DateTime>("OrderDate");
 
-                    b.Property<string>("UserId")
-                        .IsRequired();
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
@@ -168,7 +167,7 @@ namespace RicardoLourencoWebStore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("OrderId");
+                    b.Property<int>("OrderId");
 
                     b.Property<float>("Price");
 
@@ -215,7 +214,7 @@ namespace RicardoLourencoWebStore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CategoryId");
+                    b.Property<int>("CategoryId");
 
                     b.Property<string>("ImageUrl");
 
@@ -256,13 +255,9 @@ namespace RicardoLourencoWebStore.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<string>("FirstNames")
-                        .IsRequired();
+                    b.Property<string>("FirstNames");
 
-                    b.Property<bool>("IsReSeller");
-
-                    b.Property<string>("LastNames")
-                        .IsRequired();
+                    b.Property<string>("LastNames");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -349,15 +344,15 @@ namespace RicardoLourencoWebStore.Migrations
                 {
                     b.HasOne("RicardoLourencoWebStore.Data.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("RicardoLourencoWebStore.Data.Entities.OrderDetail", b =>
                 {
                     b.HasOne("RicardoLourencoWebStore.Data.Entities.Order")
                         .WithMany("Items")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("RicardoLourencoWebStore.Data.Entities.Product", "Product")
                         .WithMany()
@@ -382,7 +377,8 @@ namespace RicardoLourencoWebStore.Migrations
                 {
                     b.HasOne("RicardoLourencoWebStore.Data.Entities.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

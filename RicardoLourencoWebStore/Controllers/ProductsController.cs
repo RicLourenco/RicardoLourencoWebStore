@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -40,46 +41,33 @@ namespace RicardoLourencoWebStore.Controllers
         }
 
         // GET: Products
-        public IActionResult Index()
+        public IActionResult Index(int? id)
         {
-            var list = _productRepository.GetAllWithCategories();
+            IEnumerable<Product> list;
+
+            if (id != null)
+            {
+                list = _productRepository.GetAllWithCategories().Where(p => p.CategoryId == id);
+            }
+            else
+            {
+                list = _productRepository.GetAllWithCategories();
+            }
 
             List<ProductViewModel> modelList = new List<ProductViewModel>();
 
             foreach(var product in list)
             {
+                if (User.IsInRole("ReSeller"))
+                {
+                    product.Price *= 0.8f;
+                }
+
                 modelList.Add(_converterHelper.ToProductViewModel(product));
             }
 
             return View(modelList);
         }
-
-        //public IActionResult UrlDataSource([FromBody] DataManagerRequest dataManager)
-        //{
-        //    IEnumerable dataSource = _productRepository.GetAll();
-
-        //    DataOperations operation = new DataOperations();
-
-        //    int count = dataSource.Cast<Product>().Count();
-
-        //    if (dataManager.Skip != 0)
-        //    {
-        //        dataSource = operation.PerformSkip(dataSource, dataManager.Skip);   //Paging
-        //    }
-
-        //    if (dataManager.Take != 0)
-        //    {
-        //        dataSource = operation.PerformTake(dataSource, dataManager.Take);
-        //    }
-
-        //    return dataManager.RequiresCounts ? Json(new { result = dataSource, count = count }) : Json(dataSource);
-        //}
-
-        //public async Task<ActionResult> Insert([FromBody]CRUDModel<Product> model)
-        //{
-        //    await _productRepository.CreateAsync(model.Value);
-        //    return Json(model.Value);
-        //}
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -91,15 +79,21 @@ namespace RicardoLourencoWebStore.Controllers
 
             var product = await _context.Products
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (product == null)
             {
                 return NotFound();
             }
 
+            if (User.IsInRole("ReSeller"))
+            {
+                product.Price = product.Price * 0.8f;
+            }
+
             return View(product);
         }
 
-        // GET: Products/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             var categories = _categoryRepository.GetComboCategories();
@@ -112,9 +106,7 @@ namespace RicardoLourencoWebStore.Controllers
             return View(model);
         }
 
-        // POST: Products/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel model)
@@ -136,7 +128,7 @@ namespace RicardoLourencoWebStore.Controllers
             return View(model);
         }
 
-        // GET: Products/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -150,31 +142,35 @@ namespace RicardoLourencoWebStore.Controllers
             {
                 return NotFound();
             }
-            return View(product);
+
+            var view = _converterHelper.ToProductViewModel(product);
+
+            return View(view);
         }
 
-        // POST: Products/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,LastPurchase,LastSale,IsAvailable,Stock,ImageUrl")] Product product)
+        public async Task<IActionResult> Edit(ProductViewModel model)
         {
-            if (id != product.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
+                    var path = model.ImageUrl;
+
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
+                    {
+                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "Products");
+                    }
+
+                    var product = _converterHelper.ToProduct(model, path, false);
+
+                    await _productRepository.UpdateAsync(product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.Id))
+                    if (!await _productRepository.ExistsAsync(model.Id))
                     {
                         return NotFound();
                     }
@@ -185,10 +181,10 @@ namespace RicardoLourencoWebStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return View(model);
         }
 
-        // GET: Products/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -206,7 +202,7 @@ namespace RicardoLourencoWebStore.Controllers
             return View(product);
         }
 
-        // POST: Products/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

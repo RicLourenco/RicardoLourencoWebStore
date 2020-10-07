@@ -56,9 +56,12 @@
                                 <div class="header-info-right">
                                     <ul>
                                         <li><a asp-action="ChangeUser" asp-controller="Account">My Account </a></li>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <li><a asp-action="Index" asp-controller="Users">Admin area</a></li>
+                                        }
                                         <li><a asp-action="Index" asp-controller="Products">Shopping</a></li>
                                         <li><a asp-action="Index" asp-controller="Orders">Cart</a></li>
-                                        <li><a asp-action="Details" asp-controller="Orders">Checkout</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -85,7 +88,6 @@
                                                 <a href="#">Latest</a>
                                                 <ul class="submenu">
                                                     <li><a asp-action="Index" asp-controller="Products"> Product list</a></li>
-                                                    <li><a asp-action="Details" asp-controller="Products"> Product Details</a></li>
                                                 </ul>
                                             </li>
                                             <li><a asp-action="Contact" asp-controller="Home">Contact</a></li>
@@ -103,23 +105,14 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <li class=" d-none d-xl-block">
-                                        <div class="favorit-items">
-                                            <i class="far fa-heart"></i>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="shopping-card">
-                                            <a href="cart.html"><i class="fas fa-shopping-cart"></i></a>
-                                        </div>
-                                    </li>
-                                    @if (User.Identity.IsAuthenticated)
+                                    @if (!User.Identity.IsAuthenticated)
                                     {
-                                        <li class="d-none d-lg-block"> <a asp-action="Logout" asp-controller="Account" class="btn header-btn">Sign out</a></li>
+                                        <li class="d-none d-lg-block"> <a asp-action="login" asp-controller="identity/account" class="btn header-btn">Sign in</a></li>
+                                        <!--href="identity/account/login"-->
                                     }
                                     else
                                     {
-                                        <li class="d-none d-lg-block"> <a asp-action="Login" asp-controller="Account" class="btn header-btn">Sign In</a></li>
+                                        <li class="d-none d-lg-block"> <a asp-action="Logout" asp-controller="Account" class="btn header-btn">Sign out</a></li>
                                     }
                                 </ul>
                             </div>
@@ -184,10 +177,9 @@
                             <div class="footer-tittle">
                                 <h4>New Products</h4>
                                 <ul>
-                                    <li><a href="#">Woman Cloth</a></li>
-                                    <li><a href="#">Fashion Accessories</a></li>
-                                    <li><a href="#"> Man Accessories</a></li>
-                                    <li><a href="#"> Rubber made Toys</a></li>
+                                    <li><a href="#"> Game Consoles</a></li>
+                                    <li><a href="#"> Video Games</a></li>
+                                    <li><a href="#">Accessories</a></li>
                                 </ul>
                             </div>
                         </div>

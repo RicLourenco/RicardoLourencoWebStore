@@ -101,6 +101,8 @@ namespace RicardoLourencoWebStore.Controllers
                         return View(model);
                     }
 
+                    await _userHelper.AddUserToRoleAsync(user, "Client");
+
                     var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
                     var tokenLink = Url.Action("ConfirmEmail", "Account", new
                     {

@@ -27,6 +27,7 @@ namespace RicardoLourencoWebStore.Data
             await _context.Database.EnsureCreatedAsync();
 
             await _userHelper.CheckRolesAsync("Admin");
+            await _userHelper.CheckRolesAsync("ReSeller");
             await _userHelper.CheckRolesAsync("Client");
 
             var user = await _userHelper.GetUserByEmailAsync("ricardo.pinto.lourenco@formandos.cinel.pt");

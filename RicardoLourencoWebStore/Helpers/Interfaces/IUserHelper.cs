@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RicardoLourencoWebStore.Data.Entities;
 using RicardoLourencoWebStore.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RicardoLourencoWebStore.Helpers.Interfaces
@@ -36,5 +38,17 @@ namespace RicardoLourencoWebStore.Helpers.Interfaces
         Task<string> GeneratePasswordResetTokenAsync(User user);
 
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
+
+        Task<List<User>> GetAllUsersWithRolesAsync();
+
+        Task<string> CheckUserRoleAsync(User user);
+
+        Task<IdentityResult> RemoveUserAsync(User user, string userName);
+
+        Task ChangeUserRoleAsync(User user, string userName, string roleName);
+
+        Task RemoveUserFromRoleAsync(User user, string roleName);
+
+        IEnumerable<SelectListItem> GetComboRoles();
     }
 }

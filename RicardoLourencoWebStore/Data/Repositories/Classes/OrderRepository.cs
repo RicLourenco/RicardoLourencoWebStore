@@ -25,7 +25,7 @@ namespace RicardoLourencoWebStore.Data.Repositories.Classes
             _userHelper = userHelper;
         }
 
-        public async Task AddItemToOrderAsync(AddItemViewModel model, string userName)
+        public async Task AddItemToOrderAsync(AddItemViewModel model, string userName, bool isReSeller)
         {
             var user = await _userHelper.GetUserByEmailAsync(userName);
 
@@ -39,6 +39,11 @@ namespace RicardoLourencoWebStore.Data.Repositories.Classes
             if (product == null)
             {
                 return;
+            }
+
+            if (isReSeller)
+            {
+                product.Price *= 0.8f;
             }
 
             var orderDetailTemp = await _context.OrderDetailsTemp

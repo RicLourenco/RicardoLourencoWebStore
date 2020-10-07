@@ -45,7 +45,8 @@ namespace RicardoLourencoWebStore
             services.AddIdentity<User, IdentityRole>(cfg =>
             {
                 cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
-                cfg.SignIn.RequireConfirmedEmail = true;
+                //TODO: require confirm email messes with the external login
+                cfg.SignIn.RequireConfirmedEmail = false;
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Password.RequireDigit = true;
                 cfg.Password.RequiredUniqueChars = 0;
@@ -56,7 +57,7 @@ namespace RicardoLourencoWebStore
             })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<DataContext>();
-
+            
             services.AddAuthentication()
                 //.AddMicrosoftAccount(options =>
                 //{
@@ -71,10 +72,14 @@ namespace RicardoLourencoWebStore
                     options.AppId = Configuration["Authentication:Facebook:AppId"];
                     options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
                 })
-                //.AddGoogle(options =>
-                //{
-                //    options.ClientId = Configuration[""];
-                //})
+                .AddGoogle(options =>
+                {
+                    IConfigurationSection googleAuthNSection =
+                Configuration.GetSection("Authentication:Google");
+
+                    options.ClientId = googleAuthNSection["ClientId"];
+                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                })
                 .AddCookie()
                 .AddJwtBearer(cfg =>
                 {
@@ -98,6 +103,7 @@ namespace RicardoLourencoWebStore
             services.AddScoped<IConverterHelper, ConverterHelper>();
             services.AddScoped<IMailHelper, MailHelper>();
             services.AddScoped<IImageHelper, ImageHelper>();
+            services.AddScoped<IPdfHelper, PdfHelper>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();

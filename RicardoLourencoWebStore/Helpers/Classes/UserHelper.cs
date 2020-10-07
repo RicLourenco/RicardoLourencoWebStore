@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using RicardoLourencoWebStore.Data.Entities;
 using RicardoLourencoWebStore.Helpers.Interfaces;
 using RicardoLourencoWebStore.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RicardoLourencoWebStore.Helpers.Classes
@@ -111,6 +115,87 @@ namespace RicardoLourencoWebStore.Helpers.Classes
                 password,
                 false
                 );
+        }
+
+        public async Task<string> CheckUserRoleAsync(User user)
+        {
+            if (await IsUserInRoleAsync(user, "Admin"))
+            {
+                return "Admin";
+            }
+
+            if (await IsUserInRoleAsync(user, "ReSeller"))
+            {
+                return "ReSeller";
+            }
+
+            if (await IsUserInRoleAsync(user, "Client"))
+            {
+                return "Client";
+            }
+
+            return "Error";
+        }
+
+        public async Task<List<User>> GetAllUsersWithRolesAsync()
+        {
+            var result = await _userManager.Users.ToListAsync();
+
+            foreach (var user in result)
+            {
+                user.RoleName = await CheckUserRoleAsync(user);
+            }
+
+            return result;
+        }
+
+
+        public async Task<IdentityResult> RemoveUserAsync(User user, string userName)
+        {
+            if (user.UserName != "ricardo.pinto.lourenco@formandos.cinel.pt")
+            {
+                if (user.UserName != userName)
+                {
+                    return await _userManager.DeleteAsync(user);
+                }
+
+            }
+            return null;
+        }
+
+        public async Task ChangeUserRoleAsync(User user, string userName, string roleName)
+        {
+
+
+            if (user.UserName != "ricardo.pinto.lourenco@formandos.cinel.pt")
+            {
+                if (user.UserName != userName)
+                {
+                    await RemoveUserFromRoleAsync(user, "Admin");
+                    await RemoveUserFromRoleAsync(user, "ReSeller");
+                    await RemoveUserFromRoleAsync(user, "Client");
+
+                    await AddUserToRoleAsync(user, roleName);
+                }
+            }
+        }
+
+
+        public async Task RemoveUserFromRoleAsync(User user, string roleName)
+        {
+            await _userManager.RemoveFromRoleAsync(user, roleName);
+        }
+
+        public IEnumerable<SelectListItem> GetComboRoles()
+        {
+            var list = _roleManager.Roles.ToList().Select(
+                c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Name
+                }).ToList();
+
+            return list;
         }
     }
 }

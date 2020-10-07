@@ -13,7 +13,7 @@ namespace RicardoLourencoWebStore.Data.Repositories.Interfaces
 
         Task<IQueryable<OrderDetailTemp>> GetDetailTempAsync(string userName);
 
-        Task AddItemToOrderAsync(AddItemViewModel model, string userName);
+        Task AddItemToOrderAsync(AddItemViewModel model, string userName, bool isReSeller);
 
         Task ModifyOrderDetailTempQuantityAsync(int id, int quantity);
 

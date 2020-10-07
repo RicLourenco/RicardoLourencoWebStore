@@ -1,4 +1,5 @@
-﻿using RicardoLourencoWebStore.Data.Entities;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using RicardoLourencoWebStore.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,7 @@ namespace RicardoLourencoWebStore.Data.Repositories.Interfaces
     public interface IProductRepository : IGenericRepository<Product>
     {
         IEnumerable<Product> GetAllWithCategories();
+
+        IEnumerable<SelectListItem> GetComboProducts();
     }
 }

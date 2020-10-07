@@ -23,7 +23,6 @@ namespace RicardoLourencoWebStore.Data.Entities
         public DateTime? DeliveryDate { get; set; }
 
 
-        [Required]
         public User User { get; set; }
 
 
@@ -55,6 +54,5 @@ namespace RicardoLourencoWebStore.Data.Entities
                 return OrderDate.ToLocalTime();
             }
         }
-
     }
 }
