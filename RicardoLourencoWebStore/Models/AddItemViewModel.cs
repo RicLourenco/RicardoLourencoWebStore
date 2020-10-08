@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using RicardoLourencoWebStore.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,6 +17,6 @@ namespace RicardoLourencoWebStore.Models
         [Range(0.0001, double.MaxValue, ErrorMessage = "The quantity must be higher than 0,0001")]
         public int Quantity { get; set; }
 
-        public IEnumerable<SelectListItem> Products { get; set; }
+        public IEnumerable<Product> Products { get; set; }
     }
 }

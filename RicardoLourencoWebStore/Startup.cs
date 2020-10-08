@@ -45,8 +45,7 @@ namespace RicardoLourencoWebStore
             services.AddIdentity<User, IdentityRole>(cfg =>
             {
                 cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
-                //TODO: require confirm email messes with the external login
-                cfg.SignIn.RequireConfirmedEmail = false;
+                cfg.SignIn.RequireConfirmedEmail = true;
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Password.RequireDigit = true;
                 cfg.Password.RequiredUniqueChars = 0;
@@ -59,14 +58,6 @@ namespace RicardoLourencoWebStore
                 .AddEntityFrameworkStores<DataContext>();
             
             services.AddAuthentication()
-                //.AddMicrosoftAccount(options =>
-                //{
-                //    options.ForwardSignIn = Configuration[""];
-                //})
-                //.AddTwitter(options =>
-                //{
-                //    options.ForwardSignIn = Configuration[""];
-                //})
                 .AddFacebook(options =>
                 {
                     options.AppId = Configuration["Authentication:Facebook:AppId"];

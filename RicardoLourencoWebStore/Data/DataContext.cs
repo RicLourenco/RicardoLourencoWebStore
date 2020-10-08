@@ -38,7 +38,18 @@ namespace RicardoLourencoWebStore.Data
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
+            builder.Entity<User>()
+                .HasMany(u => u.Orders)
+                .WithOne(o => o.User)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Order>()
+                .HasMany(o => o.Items)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
             base.OnModelCreating(builder);
         }
+
     }
 }

@@ -36,11 +36,10 @@
                 </div>
                 <div class="form-group">
                     <p>
-                        <a asp-page="./ForgotPassword">Forgot your password?</a>
+                        <a class="btn btn-default" asp-controller="Account" asp-action="RecoverPassword">Forgot your password?</a>
                     </p>
                     <p>
-                        <a asp-controller="Account" asp-action="Register">Register as a new user</a>
-                        @*asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl"*@
+                        <a class="btn btn-default" asp-controller="Account" asp-action="Register">Register as a new user</a>
                     </p>
                 </div>
             </form>

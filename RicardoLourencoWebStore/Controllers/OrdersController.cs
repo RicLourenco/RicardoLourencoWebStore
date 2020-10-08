@@ -57,15 +57,20 @@ namespace RicardoLourencoWebStore.Controllers
             var model = new AddItemViewModel
             {
                 Quantity = 1,
-                Products = _productRepository.GetComboProducts()
+                Products = _productRepository.GetAllWithCategories()
             };
 
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct(AddItemViewModel model)
+        public async Task<IActionResult> AddProduct(AddItemViewModel model, string productId)
         {
+            if (!string.IsNullOrEmpty(productId))
+            {
+                model.ProductId = Convert.ToInt32(productId);
+            }
+
             if (ModelState.IsValid)
             {
                 await _orderRepository.AddItemToOrderAsync(model, User.Identity.Name, User.IsInRole("ReSeller"));
@@ -175,6 +180,42 @@ namespace RicardoLourencoWebStore.Controllers
             }
 
             return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            try
+            {
+                var order = await _context.Orders.FindAsync(id);
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View("DeleteError");
+            }
         }
     }
 }

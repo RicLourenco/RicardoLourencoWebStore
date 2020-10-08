@@ -60,7 +60,7 @@ namespace RicardoLourencoWebStore.Helpers.Classes
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(nameFrom, from));
             message.To.Add(new MailboxAddress(to, to));
-            message.Subject = "Ricardo's Water Company Invoice";
+            message.Subject = "RicardoLourenco Web Store Invoice";
 
             System.Net.Mail.Attachment file = new System.Net.Mail.Attachment(invoice.FileStream, invoice.ContentType);
 

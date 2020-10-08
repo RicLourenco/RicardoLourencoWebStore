@@ -30,5 +30,8 @@ namespace RicardoLourencoWebStore.Data.Entities
         [NotMapped]
         [Display(Name = "Role")]
         public string RoleName { get; set; }
+
+
+        public IEnumerable<Order> Orders { get; set; }
     }
 }

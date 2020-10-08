@@ -82,7 +82,6 @@ namespace RicardoLourencoWebStore.Controllers
 
                 if (user == null)
                 {
-
                     user = new User
                     {
                         FirstNames = model.FirstNames,

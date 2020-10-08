@@ -41,9 +41,15 @@ namespace RicardoLourencoWebStore.Data.Repositories.Classes
                 return;
             }
 
+            float newPrice;
+
             if (isReSeller)
             {
-                product.Price *= 0.8f;
+                newPrice = product.Price * 0.8f;
+            }
+            else
+            {
+                newPrice = product.Price;
             }
 
             var orderDetailTemp = await _context.OrderDetailsTemp
@@ -54,7 +60,7 @@ namespace RicardoLourencoWebStore.Data.Repositories.Classes
             {
                 orderDetailTemp = new OrderDetailTemp
                 {
-                    Price = product.Price,
+                    Price = newPrice,
                     Product = product,
                     Quantity = model.Quantity,
                     User = user
