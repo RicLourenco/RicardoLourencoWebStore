@@ -53,15 +53,28 @@
                             <div class="row d-flex justify-content-between align-items-center">
                                 <div class="header-info-left d-flex">
                                 </div>
-                                <div class="header-info-right">
+                                <div class="header-info-right" >
                                     <ul>
-                                        <li><a asp-action="ChangeUser" asp-controller="Account">My Account </a></li>
                                         @if (User.IsInRole("Admin"))
                                         {
-                                            <li><a asp-action="Index" asp-controller="Users">Admin area</a></li>
+                                            <li class="dropdown">
+                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin area<b class="caret"></b></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a style="color:black;" asp-action="Index" asp-controller="Users">Users management</a></li>
+                                                    <li><a style="color:black;" asp-action="Index" asp-controller="Products">Products management</a></li>
+                                                    <li><a style="color:black;" asp-action="Index" asp-controller="Orders">Orders management</a></li>
+                                                </ul>
+                                            </li>
                                         }
-                                        <li><a asp-action="Index" asp-controller="Products">Shopping</a></li>
-                                        <li><a asp-action="Index" asp-controller="Orders">Cart</a></li>
+                                        else
+                                        {
+                                            <li><a asp-action="Index" asp-controller="Products">Shopping</a></li>
+                                            <li><a asp-action="Index" asp-controller="Orders">Cart</a></li>
+                                        }
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <li><a asp-action="ChangeUser" asp-controller="Account">My Account </a></li>
+                                        }
                                     </ul>
                                 </div>
                             </div>
@@ -98,12 +111,12 @@
                             <div class="col-xl-5 col-lg-3 col-md-3 col-sm-3 fix-card">
                                 <ul class="header-right f-right d-none d-lg-block d-flex justify-content-between">
                                     <li class="d-none d-xl-block">
-                                        <div class="form-box f-right ">
+                                        @*<div class="form-box f-right ">
                                             <input type="text" name="Search" placeholder="Search products">
                                             <div class="search-icon">
                                                 <i class="fas fa-search special-tag"></i>
                                             </div>
-                                        </div>
+                                        </div>*@
                                     </li>
                                     @if (!User.Identity.IsAuthenticated)
                                     {

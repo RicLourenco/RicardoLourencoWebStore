@@ -47,10 +47,13 @@
             @Html.DisplayFor(model => model.Stock)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ImageUrl)
+            Image
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ImageUrl)
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Url.Content(Model.ImageUrl)" alt="Image" style="width:100px; height:150px; max-width:100%; height:auto" />
+            }
         </dd>
     </dl>
 </div>

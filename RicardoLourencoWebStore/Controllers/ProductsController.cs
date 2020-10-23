@@ -145,6 +145,8 @@ namespace RicardoLourencoWebStore.Controllers
 
             var view = _converterHelper.ToProductViewModel(product);
 
+            view.Categories = _categoryRepository.GetComboCategories();
+
             return View(view);
         }
 

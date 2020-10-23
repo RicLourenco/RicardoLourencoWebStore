@@ -110,6 +110,7 @@ namespace RicardoLourencoWebStore
             services.ConfigureApplicationCookie(options =>
             {
                 options.AccessDeniedPath = "/account/notauthorized";
+                options.LoginPath = "/Identity/Account/Login";
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1); 
